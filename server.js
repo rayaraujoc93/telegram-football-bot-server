@@ -10,7 +10,7 @@ const API_KEY = process.env.API_FOOTBALL_KEY;
 
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
 
-// Rota Webhook
+// Webhook do Telegram
 app.post("/webhook", async (req, res) => {
   const message = req.body.message;
 
@@ -20,7 +20,6 @@ app.post("/webhook", async (req, res) => {
 
     console.log("Mensagem recebida:", userText);
 
-    // responde o usuário
     try {
       await axios.post(`${TELEGRAM_API}/sendMessage`, {
         chat_id: chatId,
@@ -53,5 +52,6 @@ app.get("/", (req, res) => {
   res.send("Servidor funcionando!");
 });
 
+// Porta
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log("Servidor rodando na porta", PORT));
