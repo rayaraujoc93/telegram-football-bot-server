@@ -10,7 +10,7 @@ const API_KEY = process.env.API_FOOTBALL_KEY;
 
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
 
-// Mensagem padrão para testarmos
+// Rota Webhook
 app.post("/webhook", async (req, res) => {
   const message = req.body.message;
 
@@ -20,24 +20,26 @@ app.post("/webhook", async (req, res) => {
 
     console.log("Mensagem recebida:", userText);
 
-    // Enviar resposta para o usuário
-    await axios.post(`${TELEGRAM_API}/sendMessage`, {
-      chat_id: chatId,
-      text: `Recebi sua mensagem: ${userText}`
-    });
+    // responde o usuário
+    try {
+      await axios.post(`${TELEGRAM_API}/sendMessage`, {
+        chat_id: chatId,
+        text: `Recebi sua mensagem: ${userText}`
+      });
+    } catch (err) {
+      console.error("Erro ao enviar mensagem:", err.message);
+    }
   }
 
   res.sendStatus(200);
 });
 
-// Teste da API-Football
+// Teste API-Football
 app.get("/test-football", async (req, res) => {
   try {
     const response = await axios.get(
       "https://v3.football.api-sports.io/status",
-      {
-        headers: { "x-apisports-key": API_KEY }
-      }
+      { headers: { "x-apisports-key": API_KEY } }
     );
     res.json(response.data);
   } catch (err) {
@@ -46,7 +48,7 @@ app.get("/test-football", async (req, res) => {
   }
 });
 
-// Teste simples de servidor
+// Teste simples
 app.get("/", (req, res) => {
   res.send("Servidor funcionando!");
 });
